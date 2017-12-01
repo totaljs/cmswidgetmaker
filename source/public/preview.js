@@ -4,7 +4,7 @@ common.display = 'lg';
 
 ON('ready', function() {
 
-	$(document).on('input', 'select', function() {
+	$(document).on('input', '#scomponents', function() {
 		preview_download($(this).val());
 	});
 
