@@ -28,9 +28,14 @@
 		<div class="previewheadercheckbox hidden" data-b="common.detail" data-b-visible="value != null">
 			<div data-jc="checkbox" data-jc-path="common.editormode">Enable CMS editor styles</div>
 		</div>
+		<div class="previewheaderdisplay hidden" data-b="common.detail" data-b-visible="value != null">
+			<div data-jc="radiobutton" data-jc-path="common.display" data-jc-config="items:xs|XS,sm|SM,md|MD,lg|LG"></div>
+		</div>
 	</div>
 
-	<iframe id="frm" src="about:blank" width="100%" height="100%" frameborder="0"></iframe>
+	<div class="body">
+		<iframe id="frm" src="about:blank" width="100%" height="100%" frameborder="0"></iframe>
+	</div>
 
 	<div data-jc="form" data-jc-path="common.form" data-jc-config="if:settings;width:600;title:Settings;submit:settings_apply" class="hidden">
 		<div class="ui-form-padding">
