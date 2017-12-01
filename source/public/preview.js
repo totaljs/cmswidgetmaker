@@ -30,8 +30,10 @@ function preview_settings() {
 }
 
 function settings_apply(com) {
-	common.detail.exports.configure(common.detail.options, common.detail.el);
 	com.hide();
+	setTimeout2('apply', function() {
+		common.detail.exports.configure(common.detail.options, common.detail.el);
+	}, 500);
 }
 
 WATCH('common.editormode', function() {
