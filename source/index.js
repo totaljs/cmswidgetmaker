@@ -35,7 +35,7 @@ function load() {
 			var file = Fs.readFileSync(filename).toString('utf8').parseJSON();
 			var path = filename.replace(cwd, '');
 			path = path.substring(1, path.indexOf('/', 1));
-			arr.push({ name: file.name, value: path });
+			arr.push({ name: file.category + ' / ' + file.name, value: path });
 		}
 		arr.quicksort('name');
 		self.view('index', arr);
