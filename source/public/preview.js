@@ -52,7 +52,7 @@ function preview_download(name) {
 
 			AJAX('POST /api/css/', { css: data.css }, function(css) {
 
-				var dep = '<link href="https://cdn.totaljs.com/spa.min.css" rel="stylesheet" type="text/css" /><script src="https://cdn.totaljs.com/spa.min.js"></script><style>.wmargin{margin-bottom:20px}.wpadding{padding:20px 0}</style>';
+				var dep = '<link href="https://cdn.totaljs.com/spa.min.css" rel="stylesheet" type="text/css" /><script src="https://cdn.totaljs.com/spa.min.js"></script><style>.wmargin{margin-bottom:20px}.wpadding{padding:20px 0}h1{margin:0 0 20px;padding:0}h2{margin:0 0 15px;padding:0}h3{margin:0 0 10px;padding:0}p{padding:0;margin:0}</style>';
 
 				if (common.editormode)
 					dep += '<style>.CMS_edit,.CMS_widgets{cursor:crosshair}.CMS_selected_template{background-color:rgba(225,29,0,.05)!important;border-color:#D42C1A!important}.CMS_operation{opacity:.5}.CMS_widgets{border-top:6px solid #E0E0E0;padding-top:5px}.CMS_hidden{display:block!important}.CMS_panel_hidden{display:none!important}.CMS_preview .totaljs{background-color:#F0F0F0;background-image:repeating-linear-gradient(45deg,#E0E0E0,#E0E0E0 10px,#F0F0F0 10px,#F0F0F0 20px);padding:30px 0;font-weight:700;color:#000;margin:1px;text-align:center;font-size:11px;text-transform:uppercase}.CMS_preview .jcomponent span{display:block!important}iframe.CMS_edit{padding:5px;border:15px solid red}</style>';
