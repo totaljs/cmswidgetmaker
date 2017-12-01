@@ -32,6 +32,10 @@ function settings_apply(com) {
 	com.hide();
 }
 
+WATCH('common.editormode', function() {
+	common.name && preview_refresh();
+});
+
 function preview_download(name) {
 
 	common.name = name;
@@ -43,7 +47,11 @@ function preview_download(name) {
 			AJAX('POST /api/css/', { css: data.css }, function(css) {
 
 				var dep = '<link href="https://cdn.totaljs.com/spa.min.css" rel="stylesheet" type="text/css" /><script src="https://cdn.totaljs.com/spa.min.js"></script>';
-				var html = ('<!DOCTYPE html>\n<html>\n<head>\n\t<title>{0}</title>\n\t<meta charset="utf-8" />\n\t<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />\n\t<meta http-equiv="X-UA-Compatible" content="IE=10" />\n\t<meta name="robots" content="all,follow" />{1}\n\t<style>\n\t\t{2}\n\t</style>\n</head>\n<body>\n\n\t<scr' + 'ipt>\n\t\t{3}\n\t</scr' + 'ipt>\n\n\t{4}\n</body>\n</html>').format('Widget preview', dep, css, data.js, layout.replace('<div id="CMS">', '<div id="CMS">' + data.html));
+
+				if (common.editormode)
+					dep += '<style>.CMS_edit,.CMS_widgets{cursor:crosshair}.CMS_selected_template{background-color:rgba(225,29,0,.05)!important;border-color:#D42C1A!important}.CMS_operation{opacity:.5}.CMS_widgets{border-top:6px solid #E0E0E0;padding-top:5px}.CMS_hidden{display:block!important}.CMS_panel_hidden{display:none!important}.CMS_preview .totaljs{background-color:#F0F0F0;background-image:repeating-linear-gradient(45deg,#E0E0E0,#E0E0E0 10px,#F0F0F0 10px,#F0F0F0 20px);padding:30px 0;font-weight:700;color:#000;margin:1px;text-align:center;font-size:11px;text-transform:uppercase}.CMS_preview .jcomponent span{display:block!important}iframe.CMS_edit{padding:5px;border:15px solid red}</style>';
+
+				var html = ('<!DOCTYPE html>\n<html>\n<head>\n\t<title>{0}</title>\n\t<meta charset="utf-8" />\n\t<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />\n\t<meta http-equiv="X-UA-Compatible" content="IE=10" />\n\t<meta name="robots" content="all,follow" />{1}\n\t<style>\n\t\t{2}\n\t</style>\n</head>\n<body' + (common.editormode ? ' class="CMS_preview"' : '') + '>\n\n\t<scr' + 'ipt>\n\t\t{3}\n\t</scr' + 'ipt>\n\n\t{4}\n</body>\n</html>').format('Widget preview', dep, css, data.js, layout.replace('<div id="CMS">', '<div id="CMS">' + data.html));
 
 				common.detail = {};
 				common.detail.data = data;
@@ -846,5 +854,46 @@ COMPONENT('binder', function(self) {
 		});
 
 		return self;
+	};
+});
+
+COMPONENT('checkbox', function(self, config) {
+
+	self.validate = function(value) {
+		return (config.disabled || !config.required) ? true : (value === true || value === 'true' || value === 'on');
+	};
+
+	self.configure = function(key, value, init) {
+		if (init)
+			return;
+		switch (key) {
+			case 'label':
+				self.find('span').html(value);
+				break;
+			case 'required':
+				self.find('span').tclass('ui-checkbox-label-required', value);
+				break;
+			case 'disabled':
+				self.tclass('ui-disabled', value);
+				break;
+			case 'checkicon':
+				self.find('i').rclass().aclass('fa fa-' + value);
+				break;
+		}
+	};
+
+	self.make = function() {
+		self.aclass('ui-checkbox');
+		self.html('<div><i class="fa fa-{2}"></i></div><span{1}>{0}</span>'.format(config.label || self.html(), config.required ? ' class="ui-checkbox-label-required"' : '', config.checkicon || 'check'));
+		self.event('click', function() {
+			if (config.disabled)
+				return;
+			self.dirty(false);
+			self.getter(!self.get(), 2, true);
+		});
+	};
+
+	self.setter = function(value) {
+		self.toggle('ui-checkbox-checked', value ? true : false);
 	};
 });

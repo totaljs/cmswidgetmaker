@@ -7,8 +7,10 @@ html,body { height: 100%; overflow: hidden; }
 
 .previewheader { border-bottom: 1px solid #E0E0E0; height: 50px; }
 .previewheader .fa { margin-right: 5px; }
-.previewheadernav { padding: 12px 0 0 20px; }
+.previewheadernav { padding: 12px 0 0 20px; float: left; }
 .previewheadernav a { margin-right: 15px; }
+
+.previewheadercheckbox { float: left; margin: 15px 0 0 0; }
 
 .ui-multioptions { background-color: white; padding: 0 0 15px; }
 .ui-multioptions-item { height: 36px; padding: 0 10px; background-color: #F5F7FA; border-top: 1px solid #E0E0E0; }
@@ -74,3 +76,11 @@ html,body { height: 100%; overflow: hidden; }
 .ui-form-buttons button[name="cancel"] { color: gray; }
 .ui-form-buttons div { position: relative; display: inline-block; vertical-align: middle; }
 .ui-form-buttons label { float: right; margin: 12px 0 0 0; font-size: 11px; }
+
+.ui-checkbox { margin-bottom: 5px; line-height: 10px; font-size: 12px; }
+.ui-checkbox span { cursor: pointer; vertical-align: middle; }
+.ui-checkbox div { position: relative; display: inline-block; width: 16px; height: 16px; border: 2px solid #E0E0E0; margin-right: 6px; vertical-align: middle; cursor: pointer; color: white; font-size: 11px; text-align: center; padding: 1px 0 0 1px; background-color: white; border-radius: 3px; }
+.ui-checkbox .fa { display: none; }
+.ui-checkbox-checked div { background-color: #017CCA; border-color: #017CCA; }
+.ui-checkbox-checked .fa { display: block !important; }
+.ui-checkbox.ui-disabled div { background-color: #F0F0F0 !important; border-color: #E0E0E0 !important; color: gray !important; }
