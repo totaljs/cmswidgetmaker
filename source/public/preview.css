@@ -12,11 +12,11 @@ html,body { height: 100%; overflow: hidden; }
 
 .previewheader { border-bottom: 1px solid #E0E0E0; height: 50px; }
 .previewheader .fa { margin-right: 5px; }
-.previewheadernav { padding: 12px 0 0 20px; float: left; }
+.previewheadernav { padding: 15px 0 0 20px; float: left; font-size: 12px; }
 .previewheadernav a { margin-right: 15px; }
 
 .previewheadercheckbox { float: left; margin: 15px 0 0 0; }
-.previewheaderdisplay { float: left; margin: 12px 0 0 20px; }
+.previewheaderdisplay { float: right; margin: 13px 20px 0 0; }
 
 .ui-multioptions { background-color: white; padding: 0 0 15px; }
 .ui-multioptions-item { height: 36px; padding: 0 10px; background-color: #F5F7FA; border-top: 1px solid #E0E0E0; }
@@ -92,7 +92,7 @@ html,body { height: 100%; overflow: hidden; }
 .ui-checkbox.ui-disabled div { background-color: #F0F0F0 !important; border-color: #E0E0E0 !important; color: gray !important; }
 
 .ui-radiobutton { color: black; font-size: 14px; }
-.ui-radiobutton span { cursor: pointer; margin: 0 10px 10px 0; }
+.ui-radiobutton span { cursor: pointer; margin: 0 10px 10px 0; font-weight: bold; }
 .ui-radiobutton .fa { margin-right: 5px; }
 .ui-radiobutton-selected { color: #3B99FC !important; }
 .ui-radiobutton-selected * { color: #3B99FC !important; }
