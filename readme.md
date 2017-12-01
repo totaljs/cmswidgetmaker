@@ -2,7 +2,7 @@
 
 Maker CMS widgets easily.
 
-- supports live previe
+- supports live preview
 - can simulate widget settings
 
 ## Installation
