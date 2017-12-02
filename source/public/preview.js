@@ -20,11 +20,10 @@ function preview_refresh() {
 }
 
 function preview_settings() {
-	SETTER('multioptions', 'remap2', function(option) {
-		if (common.detail.data.editor) {
-			common.detail.exports = {};
-			(new Function('option', 'exports', common.detail.data.editor))(option, common.detail.exports);
-		}
+	common.detail.data.editor && SETTER('multioptions', 'remap2', function(option) {
+		common.detail.exports = {};
+		(new Function('option', 'exports', common.detail.data.editor))(option, common.detail.exports);
+		common.detail.data.editor = null;
 	});
 	SET('common.form', 'settings');
 }
@@ -47,6 +46,7 @@ WATCH('common.display', function(path, value) {
 function preview_download(name) {
 
 	common.name = name;
+	SET('common.form', '');
 
 	AJAX('GET /', { name: name, type: 1 }, function(response) {
 		AJAX('GET /', { name: name, type: 2 }, function(layout) {
