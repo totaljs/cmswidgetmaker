@@ -25,13 +25,14 @@ function preview_settings() {
 		(new Function('option', 'exports', common.detail.data.editor))(option, common.detail.exports);
 		common.detail.data.editor = null;
 	});
+	common.detail.optionsold = CLONE(common.detail.options);
 	SET('common.form', 'settings');
 }
 
 function settings_apply(com) {
 	com.hide();
 	setTimeout2('apply', function() {
-		common.detail.exports.configure(common.detail.options, common.detail.el);
+		common.detail.exports.configure(common.detail.options, common.detail.el, common.detail.optionsold);
 	}, 500);
 }
 
