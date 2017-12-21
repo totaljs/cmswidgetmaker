@@ -32,7 +32,8 @@ function preview_settings() {
 function settings_apply(com) {
 	com.hide();
 	setTimeout2('apply', function() {
-		common.detail.exports.configure(common.detail.options, common.detail.el, common.detail.optionsold);
+		var dep = FIND('multioptions').dependencies();
+		common.detail.exports.configure.call(dep, common.detail.options, common.detail.el, common.detail.optionsold);
 	}, 500);
 }
 
@@ -168,6 +169,7 @@ COMPONENT('multioptions', function(self) {
 	var Tcolor = null;
 	var skip = false;
 	var mapping = null;
+	var dep = {};
 
 	self.getter = null;
 	self.novalidate();
@@ -177,6 +179,10 @@ COMPONENT('multioptions', function(self) {
 	};
 
 	self.form = function() {};
+
+	self.dependencies = function() {
+		return dep;
+	};
 
 	self.make = function() {
 
@@ -274,16 +280,20 @@ COMPONENT('multioptions', function(self) {
 	self.remap = function(js) {
 		var fn = new Function('option', js);
 		mapping = {};
+		dep = {};
 		fn(self.mapping);
 		self.refresh();
 		self.change(false);
+		self.$save();
 	};
 
 	self.remap2 = function(callback) {
 		mapping = {};
+		dep = {};
 		callback(self.mapping);
 		self.refresh();
 		self.change(false);
+		self.$save();
 	};
 
 	self.mapping = function(key, label, def, type, max, min, step, validator) {
@@ -309,9 +319,23 @@ COMPONENT('multioptions', function(self) {
 			type = 'array';
 		}
 
+		var t = (type || '').toLowerCase();
+
+		switch (t) {
+			case 'posts':
+			case 'signals':
+			case 'notices':
+			case 'navigations':
+			case 'partial':
+				values = [{ value: '', text: '' }];
+				type = 'array';
+				break;
+		}
+
 		if (validator && typeof(validator) !== 'function')
 			validator = null;
 
+		dep[key] = values;
 		mapping[key] = { name: key, label: label, type: type.toLowerCase(), def: def, max: max, min: min, step: step, value: def, values: values, validator: validator };
 	};
 
@@ -398,7 +422,7 @@ COMPONENT('multioptions', function(self) {
 
 			var value = '';
 
-			switch (option.type) {
+			switch (option.type.toLowerCase()) {
 				case 'string':
 					value = Tinput(option);
 					break;

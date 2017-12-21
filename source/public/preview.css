@@ -3,7 +3,7 @@ html,body { height: 100%; overflow: hidden; }
 
 #frm { width: 100%; height: 100%; }
 .lg { width: 100%; }
-.md { width: 1280px !important; }
+.md { width: 1190px !important; }
 .sm { width: 920px !important; }
 .xs { width: 480px !important; }
 .body { text-align: center; height: 100%; background-color: #F8F8F8; }
