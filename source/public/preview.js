@@ -159,7 +159,7 @@ function compile(html) {
 	return obj;
 }
 
-COMPONENT('multioptions', function(self) {
+COMPONENT('multioptions', 'rebind:true', function(self, config) {
 
 	var Tinput = Tangular.compile('<input class="ui-moi-save ui-moi-value-inputtext" data-name="{{ name }}" type="text" value="{{ value }}"{{ if def }} placeholder="{{ def }}"{{ fi }}{{ if max }} maxlength="{{ max }}"{{ fi }} data-type="text" />');
 	var Tselect = Tangular.compile('<div class="ui-moi-value-select"><i class="fa fa-chevron-down"></i><select data-name="{{ name }}" class="ui-moi-save ui-multioptions-select">{{ foreach m in values }}<option value="{{ $index }}"{{ if value === m.value }} selected="selected"{{ fi }}>{{ m.text }}</option>{{ end }}</select></div>');
@@ -284,7 +284,7 @@ COMPONENT('multioptions', function(self) {
 		fn(self.mapping);
 		self.refresh();
 		self.change(false);
-		self.$save();
+		config.rebind && self.$save();
 	};
 
 	self.remap2 = function(callback) {
@@ -293,7 +293,7 @@ COMPONENT('multioptions', function(self) {
 		callback(self.mapping);
 		self.refresh();
 		self.change(false);
-		self.$save();
+		config.rebind && self.$save();
 	};
 
 	self.mapping = function(key, label, def, type, max, min, step, validator) {
@@ -373,12 +373,19 @@ COMPONENT('multioptions', function(self) {
 			}
 
 			if (el.hclass('ui-moi-value-numbertext')) {
-				obj[key] = el.val().parseInt();
-				return;
-			}
 
-			if (el.hclass('ui-moi-value-numbertext')) {
 				obj[key] = el.val().parseInt();
+
+				if (opt.max !== null && obj[key] > opt.max) {
+					obj[key] = opt.max;
+					el.val(opt.max);
+				}
+
+				if (opt.min !== null && obj[key] < opt.min) {
+					obj[key] = opt.min;
+					el.val(opt.min);
+				}
+
 				return;
 			}
 
@@ -783,7 +790,7 @@ COMPONENT('binder', function(self) {
 			var is = true;
 
 			if (item.visible) {
-				is = item.visible(value) ? true : false;
+				is = !!item.visible(value);
 				element.tclass('hidden', !is);
 			}
 
@@ -791,6 +798,7 @@ COMPONENT('binder', function(self) {
 				item.html && element.html(item.Ta ? item.html(template) : item.html(value));
 				item.disable && element.prop('disabled', item.disable(value));
 				item.src && element.attr('src', item.src(value));
+				item.href && element.attr('href', item.href(value));
 			}
 		}
 	};
@@ -830,6 +838,18 @@ COMPONENT('binder', function(self) {
 
 			var el = $(this);
 			var path = el.attrd('b').replace('%', 'jctmp.');
+
+			if (path.indexOf('?') !== -1) {
+				var scope = el.closest('[data-jc-scope]');
+				if (scope) {
+					var data = scope.get(0).$scopedata;
+					if (data == null)
+						return;
+					path = path.replace(/\?/g, data.path);
+				} else
+					return;
+			}
+
 			var arr = path.split('.');
 			var p = '';
 
@@ -839,6 +859,7 @@ COMPONENT('binder', function(self) {
 			var disable = el.attrd('b-disable');
 			var selector = el.attrd('b-selector');
 			var src = el.attrd('b-src');
+			var href = el.attrd('b-href');
 			var obj = el.data('data-b');
 
 			keys_unique[path] = true;
@@ -852,6 +873,7 @@ COMPONENT('binder', function(self) {
 				obj.disable = disable ? self.prepare(disable) : undefined;
 				obj.selector = selector ? selector : null;
 				obj.src = src ? self.prepare(src) : undefined;
+				obj.href = href ? self.prepare(href) : undefined;
 
 				if (el.attrd('b-template') === 'true') {
 					var tmp = el.find('script[type="text/html"]');
