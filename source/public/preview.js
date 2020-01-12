@@ -56,7 +56,7 @@ function preview_download(name) {
 
 			AJAX('POST /api/css/', { css: data.css }, function(css) {
 
-				var dep = '<link href="https://cdn.totaljs.com/spa.min.css" rel="stylesheet" type="text/css" /><script src="https://cdn.totaljs.com/spa.min.js"></script><style>.wm{margin-bottom:20px}.wmi{margin-bottom:15px}.wp{padding-left:15px;padding-right:15px}.wpi{}h1{margin:0 0 20px;padding:0}h2{margin:0 0 15px;padding:0}h3{margin:0 0 10px;padding:0}p{padding:0;margin:0}.wnowrap{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}@media(max-width:768px){.wnowrap{overflow-x:auto;text-overflow:clip;overflow-scrolling:touch;-webkit-overflow-scrolling:touch}}</style>';
+				var dep = '<link href="https://cdn.componentator.com/spa.min@15.css" rel="stylesheet" type="text/css" /><script src="https://cdn.componentator.com/spa.min@15.js"></script><style>.wm{margin-bottom:20px}.wmi{margin-bottom:15px}.wp{padding-left:15px;padding-right:15px}.wpi{}h1{margin:0 0 20px;padding:0}h2{margin:0 0 15px;padding:0}h3{margin:0 0 10px;padding:0}p{padding:0;margin:0}.wnowrap{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}@media(max-width:768px){.wnowrap{overflow-x:auto;text-overflow:clip;overflow-scrolling:touch;-webkit-overflow-scrolling:touch}}</style>';
 
 				if (common.editormode)
 					dep += '<style>.CMS_edit,.CMS_widgets{cursor:crosshair}.CMS_selected_template{background-color:rgba(225,29,0,.05)!important;border-color:#D42C1A!important}.CMS_operation{opacity:.5}.CMS_widgets{border-top:6px solid #E0E0E0;padding-top:5px}.CMS_hidden{display:block!important}.CMS_panel_hidden{display:none!important}.CMS_preview .totaljs{background-color:#F0F0F0;background-image:repeating-linear-gradient(45deg,#E0E0E0,#E0E0E0 10px,#F0F0F0 10px,#F0F0F0 20px);padding:30px 0;font-weight:700;color:#000;margin:1px;text-align:center;font-size:11px;text-transform:uppercase}.CMS_preview .jcomponent span{display:block!important}iframe.CMS_edit{padding:5px;border:15px solid red}</style>';
@@ -466,18 +466,18 @@ COMPONENT('multioptions', 'rebind:true', function(self, config) {
 COMPONENT('form', function(self, config) {
 
 	var W = window;
-	var header = null;
 	var csspos = {};
 
 	if (!W.$$form) {
+
 		W.$$form_level = W.$$form_level || 1;
 		W.$$form = true;
+
 		$(document).on('click', '.ui-form-button-close', function() {
-			SET($(this).attr('data-path'), '');
-			W.$$form_level--;
+			SET($(this).attrd('path'), '');
 		});
 
-		$(window).on('resize', function() {
+		$(W).on('resize', function() {
 			SETTER('form', 'resize');
 		});
 
@@ -511,6 +511,11 @@ COMPONENT('form', function(self, config) {
 		self.set('');
 	};
 
+	self.icon = function(value) {
+		var el = this.rclass2('fa');
+		value.icon && el.aclass('fa fa-' + value.icon);
+	};
+
 	self.resize = function() {
 		if (!config.center || self.hclass('hidden'))
 			return;
@@ -524,21 +529,11 @@ COMPONENT('form', function(self, config) {
 
 	self.make = function() {
 
-		var icon;
-
-		if (config.icon)
-			icon = '<i class="fa fa-{0}"></i>'.format(config.icon);
-		else
-			icon = '<i></i>';
-
-		$(document.body).append('<div id="{0}" class="hidden ui-form-container"><div class="ui-form-container-padding"><div class="ui-form" style="max-width:{1}px"><div class="ui-form-title"><button class="ui-form-button-close" data-path="{2}"><i class="fa fa-times"></i></button>{4}<span>{3}</span></div></div></div>'.format(self._id, config.width || 800, self.path, config.title, icon));
-
-		var el = $('#' + self._id);
-		el.find('.ui-form').get(0).appendChild(self.element.get(0));
+		$(document.body).append('<div id="{0}" class="hidden ui-form-container"><div class="ui-form-container-padding"><div class="ui-form" style="max-width:{1}px"><div data-bind="@config__html span:value.title__change .ui-form-icon:@icon" class="ui-form-title"><button class="ui-form-button-close{3}" data-path="{2}"><i class="fa fa-times"></i></button><i class="ui-form-icon"></i><span></span></div></div></div>'.format(self.ID, config.width || 800, self.path, config.closebutton == false ? ' hidden' : ''));
+		var el = $('#' + self.ID);
+		el.find('.ui-form')[0].appendChild(self.dom);
 		self.rclass('hidden');
 		self.replace(el);
-
-		header = self.virtualize({ title: '.ui-form-title > span', icon: '.ui-form-title > i' });
 
 		self.event('scroll', function() {
 			EMIT('scroll', self.name);
@@ -546,7 +541,6 @@ COMPONENT('form', function(self, config) {
 		});
 
 		self.find('button').on('click', function() {
-			W.$$form_level--;
 			switch (this.name) {
 				case 'submit':
 					self.submit(self.hide);
@@ -558,8 +552,8 @@ COMPONENT('form', function(self, config) {
 		});
 
 		config.enter && self.event('keydown', 'input', function(e) {
-			e.which === 13 && !self.find('button[name="submit"]').get(0).disabled && setTimeout(function() {
-				self.submit(self.hide);
+			e.which === 13 && !self.find('button[name="submit"]')[0].disabled && setTimeout(function() {
+				self.submit(self);
 			}, 800);
 		});
 	};
@@ -568,38 +562,46 @@ COMPONENT('form', function(self, config) {
 		if (init)
 			return;
 		switch (key) {
-			case 'icon':
-				header.icon.rclass(header.icon.attr('class'));
-				value && header.icon.aclass('fa fa-' + value);
-				break;
-			case 'title':
-				header.title.html(value);
-				break;
 			case 'width':
 				value !== prev && self.find('.ui-form').css('max-width', value + 'px');
+				break;
+			case 'closebutton':
+				self.find('.ui-form-button-close').tclass(value !== true);
 				break;
 		}
 	};
 
 	self.setter = function(value) {
 
-		setTimeout2('noscroll', function() {
-			$('html').tclass('noscroll', $('.ui-form-container').not('.hidden').length ? true : false);
+		setTimeout2('ui-form-noscroll', function() {
+			$('html').tclass('ui-form-noscroll', !!$('.ui-form-container').not('.hidden').length);
 		}, 50);
 
 		var isHidden = value !== config.if;
 
-		self.toggle('hidden', isHidden);
+		if (self.hclass('hidden') === isHidden)
+			return;
 
 		setTimeout2('formreflow', function() {
 			EMIT('reflow', self.name);
 		}, 10);
 
 		if (isHidden) {
+			self.aclass('hidden');
 			self.release(true);
 			self.find('.ui-form').rclass('ui-form-animate');
+			W.$$form_level--;
 			return;
 		}
+
+		if (W.$$form_level < 1)
+			W.$$form_level = 1;
+
+		W.$$form_level++;
+
+		self.css('z-index', W.$$form_level * 10);
+		self.element.scrollTop(0);
+		self.rclass('hidden');
 
 		self.resize();
 		self.release(false);
@@ -609,15 +611,8 @@ COMPONENT('form', function(self, config) {
 
 		if (!isMOBILE && config.autofocus) {
 			var el = self.find(config.autofocus === true ? 'input[type="text"],select,textarea' : config.autofocus);
-			el.length && el.eq(0).focus();
+			el.length && el[0].focus();
 		}
-
-		if (W.$$form_level < 1)
-			W.$$form_level = 1;
-
-		W.$$form_level++;
-		self.css('z-index', W.$$form_level * 10);
-		self.element.scrollTop(0);
 
 		setTimeout(function() {
 			self.element.scrollTop(0);
@@ -625,9 +620,9 @@ COMPONENT('form', function(self, config) {
 		}, 300);
 
 		// Fixes a problem with freezing of scrolling in Chrome
-		setTimeout2(self.id, function() {
+		setTimeout2(self.ID, function() {
 			self.css('z-index', (W.$$form_level * 10) + 1);
-		}, 1000);
+		}, 500);
 	};
 });
 
