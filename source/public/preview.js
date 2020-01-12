@@ -78,10 +78,10 @@ function preview_download(name) {
 
 			AJAX('POST /api/css/', { css: data.css }, function(css) {
 
-				var dep = '<link href="https://cdn.componentator.com/spa.min@18.css" rel="stylesheet" type="text/css" /><script src="https://cdn.componentator.com/spa.min@18.js"></script><style>a{pointer-events:none}.wb.wp{padding-left:20px;padding-right:20px}.wb.wm{margin-bottom:20px}.wbi.wmi{margin-bottom:20px}.wbi.wpi{padding-left:20px;padding-right:20px}</style>';
+				var dep = '<link href="https://cdn.componentator.com/spa.min@18.css" rel="stylesheet" type="text/css" />' + (common.editormode ? '' : '<script src="https://cdn.componentator.com/spa.min@18.js"></script>') + '<style>a{pointer-events:none}.wb.wp{padding-left:20px;padding-right:20px}.wb.wm{margin-bottom:20px}.wbi.wmi{margin-bottom:20px}.wbi.wpi{padding-left:20px;padding-right:20px}</style>';
 
 				if (common.editormode)
-					dep += '<style>.CMS_edit,.CMS_widgets{cursor:crosshair}.CMS_selected_template{background-color:rgba(225,29,0,.05)!important;border-color:#D42C1A!important}.CMS_operation{opacity:.5}.CMS_widgets{border-top:6px solid #E0E0E0;padding-top:5px}.CMS_hidden{display:block!important}.CMS_panel_hidden{display:none!important}.CMS_preview .totaljs{background-color:#F0F0F0;background-image:repeating-linear-gradient(45deg,#E0E0E0,#E0E0E0 10px,#F0F0F0 10px,#F0F0F0 20px);padding:30px 0;font-weight:700;color:#000;margin:1px;text-align:center;font-size:11px;text-transform:uppercase}.CMS_preview .jcomponent span{display:block!important}iframe.CMS_edit{padding:5px;border:15px solid red}</style>';
+					dep += '<style>.CMS_edit,.CMS_widgets{cursor:crosshair}.CMS_selected_template{background-color:rgba(225,29,0,.05)!important;border-color:#D42C1A!important}.CMS_operation{opacity:.5}.CMS_widgets{border-top:6px solid #E0E0E0;padding-top:5px}.CMS_hidden{display:block!important}.CMS_panel_hidden{display:none!important}.CMS_preview .totaljs{background-color:#F0F0F0;background-image:repeating-linear-gradient(45deg,#E0E0E0,#E0E0E0 10px,#F0F0F0 10px,#F0F0F0 20px);padding:30px 0;font-weight:700;color:#000;margin:1px;text-align:center;font-size:11px;text-transform:uppercase}.CMS_preview .jcomponent span{display:block!important}iframe.CMS_edit{padding:5px;border:15px solid red}.CMS_visible{display:block!important;visibility:visible!important;}.CMS_preview a[data-cms-track]{outline:2px dashed blue}.CMS_preview .CMS_input{font-size:12px;}.CMS_preview.CMS_input:after{height:40px;background-color:#F0F0F0;background-image:repeating-linear-gradient(45deg,#E0E0E0,#E0E0E010px,#F0F0F010px,#F0F0F020px);margin-top:4px;display:block;content:" ";border-radius:3px}</style>';
 
 				var html = ('<!DOCTYPE html>\n<html>\n<head>\n\t<title>{0}</title>\n\t<meta charset="utf-8" />\n\t<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />\n\t<meta http-equiv="X-UA-Compatible" content="IE=10" />\n\t<meta name="robots" content="all,follow" />{1}\n\t<style>\n\t\t{2}\n\t</style>\n</head>\n<body' + (common.editormode ? ' class="CMS_preview"' : '') + '>\n\n\t<scr' + 'ipt>\n\t\t{3}\n\t</scr' + 'ipt>\n\n\t{4}\n</body>\n</html>').format('Widget preview', dep, css, data.js, layout.replace('<div id="CMS">', '<div id="CMS">' + data.html));
 
@@ -93,24 +93,31 @@ function preview_download(name) {
 
 				var frm = document.getElementById('frm');
 				var w = frm.contentWindow;
+				frm.src = 'about:blank';
 				w.document.open();
-				w.document.write(html);
 				w.document.close();
 
-				common.detail.frm = frm;
-
 				setTimeout(function() {
-					common.detail.el = $(frm).contents().find('#CMS');
-					$(common.detail.frm).contents().on('click', function() {
-						$(window).focus();
-						$(document).focus();
-					}).on('click', 'a', function(e) {
-						e.preventDefault();
-						e.stopPropagation();
-					});
-				}, 500);
+					var w = frm.contentWindow;
+					w.document.open();
+					w.document.write(html);
+					w.document.close();
 
-				UPDATE('common.detail');
+					common.detail.frm = frm;
+
+					setTimeout(function() {
+						common.detail.el = $(frm).contents().find('#CMS');
+						$(common.detail.frm).contents().on('click', function() {
+							$(window).focus();
+							$(document).focus();
+						}).on('click', 'a', function(e) {
+							e.preventDefault();
+							e.stopPropagation();
+						});
+					}, 500);
+
+					UPDATE('common.detail');
+				}, 100);
 			});
 		});
 	});
