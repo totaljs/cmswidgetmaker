@@ -9,42 +9,67 @@
 	<meta name="format-detection" content="telephone=no" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<meta name="robots" content="all,follow" />
-	<link href="//fonts.googleapis.com/css?family=Roboto:300,400,700&subset=latin-ext" rel="stylesheet" type="text/css" />
-	<link href="https://cdn.componentator.com/spa.min@15.css" rel="stylesheet" type="text/css" />
+	<link href="https://cdn.componentator.com/spa.min@18.css" rel="stylesheet" type="text/css" />
 	<link href="preview.css" rel="stylesheet" type="text/css" />
-	<script src="https://cdn.componentator.com/spa.min@15.js"></script>
+	<script src="https://cdn.componentator.com/spa.min@18.js"></script>
 	<script src="preview.js"></script>
 </head>
-<body data-jc="exec,binder">
+<body data---="exec">
 
-	<div data-jc="shortcuts"></div>
+	<div data---="LAZY colorpicker"></div>
+	<div data---="shortcuts"></div>
+	<div data---="directory__null__placeholder:Search"></div>
+
+	@{json(model, 'componentsdata')}
 
 	<div class="previewheader">
-		<div class="widgets"><select name="component" id="scomponents" style="width:300px">@{options(model)}</select></div>
-		<nav class="previewheadernav hidden" data-b="common.detail" data-b-visible="value != null">
-			<a href="javascript:void(0)" class="exec" data-exec="preview_refresh"><i class="fa fa-refresh"></i>Refresh</a>
-			<a href="javascript:void(0)" class="exec" data-exec="preview_settings" data-b="common.detail.data.editor" data-b-visible="value"><i class="fa fa-cog"></i>Settings</a>
+
+		<div class="previewheaderdisplay hidden" data-bind="common.detail__show">
+			<div data---="radiobutton__common.display__items:XS|xs,SM|sm,MD|md,LG|lg__'lg'"></div>
+		</div>
+
+		<div class="widgets"><div data---="input__common.name__dirsource:common.components;placeholder:Choose a widget"></div></div>
+
+		<nav class="previewheadernav">
+			<button class="exec" disabled data-exec="preview_refresh" data-bind="common.detail__enabled"><i class="fa fa-refresh"></i>Refresh</button>
+			<button class="exec" disabled data-exec="preview_settings" data-bind="common.detail.data.editor__enabled"><i class="fa fa-cog"></i>Settings</button>
+			<span></span>
+			<button class="exec" data-path="common.window" data-value="'base64'"><i class="fa fa-images"></i>Base64 picture</button>
+			<span></span>
 		</nav>
-		<div class="previewheadercheckbox hidden" data-b="common.detail" data-b-visible="value != null">
-			<div data-jc="checkbox" data-jc-path="common.editormode">Enable CMS editor styles</div>
+
+		<div class="previewheadercheckbox hidden" data-bind="common.detail__show">
+			<div data---="checkbox__common.editormode">Enable CMS editor styles</div>
 		</div>
-		<div class="previewheaderdisplay hidden" data-b="common.detail" data-b-visible="value != null">
-			<div data-jc="radiobutton" data-jc-path="common.display" data-jc-config="items:xs|XS,sm|SM,md|MD,lg|LG"></div>
-		</div>
+
 	</div>
 
-	<div class="body">
-		<iframe id="frm" src="about:blank" width="100%" height="100%" frameborder="0"></iframe>
-	</div>
+	<iframe id="frm" src="about:blank" width="100%" height="100%" frameborder="0"></iframe>
 
-	<div data-jc="form" data-jc-path="common.form" data-jc-config="if:settings;width:600;title:Settings;submit:settings_apply" class="hidden">
-		<div class="ui-form-padding">
-			<div data-jc="multioptions" data-jc-path="common.detail.options" style="margin-bottom:10px"></div>
+	<div data---="form__common.form__if:settings;width:600;title:Widget settings;submit:settings_apply;icon:cog" class="hidden">
+		<div class="padding">
+			<div data---="multioptions__common.detail.options"></div>
 		</div>
-		<div class="ui-form-buttons">
-			<button name="submit">Apply</button>
+		<nav>
+			<button name="submit">APPLY</button>
 			<button name="cancel">Close</button>
 		</div>
+	</div>
+
+	<div data---="window__common.window__if:base64;title:Base64 picture" class="hidden">
+		<script type="text/html">
+			<div class="padding">
+				<div style="width:250px;border:1px solid #E0E0E0;border-radius:2px;float:left;margin-right:20px" class="padding">
+					<div data-scope="base64">
+						<div data---="input__?.width__required:1;type:number__250" class="m">Width</div>
+						<div data---="input__?.height__required:1;type:number__250" class="m">Height</div>
+						<div data---="colorpickerbutton__?.color__null__'#D1D1D1'" class="m"></div>
+						<div><textarea class="selectall" readonly></textarea></div>
+					</div>
+				</div>
+				<canvas id="image"></canvas>
+			</div>
+		</script>
 	</div>
 
 </body>
