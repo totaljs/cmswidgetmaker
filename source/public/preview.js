@@ -78,7 +78,7 @@ function preview_download(name) {
 
 			AJAX('POST /api/css/', { css: data.css }, function(css) {
 
-				var dep = '<link href="https://cdn.componentator.com/spa.min@18.css" rel="stylesheet" type="text/css" /><script src="https://cdn.componentator.com/spa.min@18.js"></script><style>a{pointer-events:none}</style>';
+				var dep = '<link href="https://cdn.componentator.com/spa.min@18.css" rel="stylesheet" type="text/css" /><script src="https://cdn.componentator.com/spa.min@18.js"></script><style>a{pointer-events:none}.wb.wp{padding-left:20px;padding-right:20px}.wb.wm{margin-bottom:20px}.wbi.wmi{margin-bottom:20px}.wbi.wpi{padding-left:20px;padding-right:20px}</style>';
 
 				if (common.editormode)
 					dep += '<style>.CMS_edit,.CMS_widgets{cursor:crosshair}.CMS_selected_template{background-color:rgba(225,29,0,.05)!important;border-color:#D42C1A!important}.CMS_operation{opacity:.5}.CMS_widgets{border-top:6px solid #E0E0E0;padding-top:5px}.CMS_hidden{display:block!important}.CMS_panel_hidden{display:none!important}.CMS_preview .totaljs{background-color:#F0F0F0;background-image:repeating-linear-gradient(45deg,#E0E0E0,#E0E0E0 10px,#F0F0F0 10px,#F0F0F0 20px);padding:30px 0;font-weight:700;color:#000;margin:1px;text-align:center;font-size:11px;text-transform:uppercase}.CMS_preview .jcomponent span{display:block!important}iframe.CMS_edit{padding:5px;border:15px solid red}</style>';
